@@ -2,15 +2,29 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from followers.models import Relationship
+from followers.utils import get_followers, get_following
 
 
 class RelationshipTests(TestCase):
 
-    def test_relationship_related_names_work_properly(self):
+    def setUp(self):
+        """
+        Se ejecuta antes de cada test
+        :return:
+        """
+        self.user1 = User.objects.create_user("luke", "skywalker@starwars.com", "skywalker")
+        self.user2 = User.objects.create_user("anakin", "annie@starwars.com", "skywalker")
 
-        user1 = User.objects.create_user("luke", "skywalker@starwars.com", "skywalker")
-        user2 = User.objects.create_user("anakin", "annie@starwars.com", "skywalker")
+        Relationship.objects.create(origin=self.user1, target=self.user2)  # user1 sigue a user2
 
-        Relationship.objects.create(origin=user1, target=user2)
 
-        self.assertEqual(user2, user1.following.all()[0]) #el único usuario al que sigue el user1 es el user 2
+    def test_get_followers_returns_users_that_follow_a_given_user(self):
+        followers = get_followers(self.user2)
+        self.assertEqual([self.user1], followers) #followers == [user1]
+
+
+    def test_get_following_returns_users_that_a_given_user_follows(self):
+
+        following = get_following(self.user1)
+
+        self.assertEqual([self.user2], following)  # followers == [user1]
