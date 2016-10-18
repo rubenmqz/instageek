@@ -1,7 +1,6 @@
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.response import Response
 
 from followers.models import Relationship
 from followers.serializers import RelationshipUserSerializer, RelationshipSerializer

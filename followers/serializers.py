@@ -20,4 +20,9 @@ class RelationshipSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
+        request_user = self.context.get('request').user
+        if request_user == attrs.get('target'):
+            raise serializers.ValidationError("You cannot follow yourself")
+        if Relationship.objects.filter(origin=request_user, target=attrs.get('target')).exists():
+            raise serializers.ValidationError("You already follow this user")
         return attrs

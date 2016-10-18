@@ -36,5 +36,8 @@ class FollowAPITests(APITestCase):
     def test_endpoint_returns_400_bad_request_when_target_user_is_already_followed(self):
         user2 = User.objects.create_user('anakin', "anakin@starwars.com", self.USERS_PASSWORD)
         Relationship.objects.create(origin=self.user1, target=user2)
+        self.client.login(username=self.user1.username, password=self.USERS_PASSWORD)
         response = self.client.post(self.FOLLOW_API_URL, {'target': user2.pk})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
