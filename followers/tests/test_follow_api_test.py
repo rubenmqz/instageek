@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 from followers.models import Relationship
+from followers.utils import get_following
 
 
 @override_settings(ROOT_URLCONF='followers.urls')
@@ -14,6 +15,7 @@ class FollowAPITests(APITestCase):
 
     def setUp(self):
         self.user1 = User.objects.create_user('luke', "skywalker@starwars.com", self.USERS_PASSWORD)
+        self.user2 = User.objects.create_user('anakin', "anakin@starwars.com", self.USERS_PASSWORD)
 
     def test_endpoint_returns_403_when_user_is_not_authenticated(self):
         response = self.client.post(self.FOLLOW_API_URL, {})
@@ -34,10 +36,22 @@ class FollowAPITests(APITestCase):
         self.assertEqual(response.data.get('target'), ['Invalid pk "0" - object does not exist.'])
 
     def test_endpoint_returns_400_bad_request_when_target_user_is_already_followed(self):
-        user2 = User.objects.create_user('anakin', "anakin@starwars.com", self.USERS_PASSWORD)
-        Relationship.objects.create(origin=self.user1, target=user2)
+
+        Relationship.objects.create(origin=self.user1, target=self.user2)
         self.client.login(username=self.user1.username, password=self.USERS_PASSWORD)
-        response = self.client.post(self.FOLLOW_API_URL, {'target': user2.pk})
+        response = self.client.post(self.FOLLOW_API_URL, {'target': self.user2.pk})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data.get('non_field_errors'), ['You already follow this user'])
 
+    def test_endpoint_returns_201_created_when_target_user_is_not_followed(self):
+        self.client.login(username=self.user1.username, password=self.USERS_PASSWORD)
+        response = self.client.post(self.FOLLOW_API_URL, {'target': self.user2.pk})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.user2, get_following(self.user1)[0])
+        self.assertTrue(Relationship.objects.filter(origin=self.user1, target=self.user2).exists())
 
+    def test_endpoint_returns_400_bad_request_when_users_follows_itself(self):
+        self.client.login(username=self.user1.username, password=self.USERS_PASSWORD)
+        response = self.client.post(self.FOLLOW_API_URL, {'target': self.user1.pk})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data.get('non_field_errors'), ['You cannot follow yourself'])

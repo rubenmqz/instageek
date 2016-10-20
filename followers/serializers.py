@@ -16,8 +16,6 @@ class RelationshipSerializer(serializers.ModelSerializer):
         model = Relationship
         read_only_fields = ('origin',)
 
-    def validate_target(self, value):
-        return value
 
     def validate(self, attrs):
         request_user = self.context.get('request').user
