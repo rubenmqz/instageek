@@ -134,3 +134,11 @@ MEDIA_URL = '/media/'
 # Image size
 DEFAULT_IMAGE_SIZE = (1000, 1000)
 
+THUMBNAIL_HIGH_RESOLUTION = True
+THUMBNAIL_ALIASES = {
+    '': {
+        'small': {'size': (500, 500), 'crop': True},
+        'medium': {'size': (750, 750), 'crop': True},
+        'large': {'size': (1000, 1000), 'crop': True},
+    },
+}
