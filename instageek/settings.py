@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'followers',
     'posts',
+    'easy_thumbnails',
 ]
 
 MIDDLEWARE = [
@@ -129,4 +130,7 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
+
+# Image size
+DEFAULT_IMAGE_SIZE = (1000, 1000)
 
