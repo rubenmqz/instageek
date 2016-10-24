@@ -6,8 +6,6 @@ from rest_framework.permissions import IsAuthenticated
 
 from posts.models import Post
 from posts.serializers import PostSerializer
-from posts.utils import generate_responsive_images
-
 
 class PostViewSet(ModelViewSet):
 
@@ -16,9 +14,7 @@ class PostViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        post = serializer.save(owner=self.request.user)
-        generate_responsive_images(post)
+        serializer.save(owner=self.request.user)
 
     def perform_update(self, serializer):
-        post = serializer.save(owner=self.request.user)
-        generate_responsive_images(post)
+        serializer.save(owner=self.request.user)
