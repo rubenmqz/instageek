@@ -43,6 +43,11 @@ INSTALLED_APPS = [
     'kombu.transport.django', #para que funcione como broker/cola de tareas
     'rest_framework.authtoken', # contiene los modelos y clases para generar los API keys
     'users',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'django.contrib.sites',
 ]
 
 MIDDLEWARE = [
@@ -155,6 +160,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication', # poder autenticarnos por API key
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication', #poder autenticarnos por JWT
     )
 }
+
+SITE_ID = 1
+
+# No enviar e-mail de verificacion de cuenta
+ACCOUNT_EMAIL_VERIFICATION = "none"
+REST_USE_JWT = True  # al hacer login os devuelvan el token JWT
