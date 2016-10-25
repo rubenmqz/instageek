@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'followers',
     'posts',
     'easy_thumbnails',
+    'kombu.transport.django' #para que funcione como broker/cola de tareas
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,5 @@ THUMBNAIL_ALIASES = {
         'large': {'size': (1000, 1000), 'crop': True},
     },
 }
+
+BROKER_URL = 'django://' #le dice a celery que se tiene que conectar a Kombu
