@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'followers',
     'posts',
     'easy_thumbnails',
-    'kombu.transport.django' #para que funcione como broker/cola de tareas
+    'kombu.transport.django', #para que funcione como broker/cola de tareas
+    'rest_framework.authtoken', # contiene los modelos y clases para generar los API keys
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +148,13 @@ THUMBNAIL_ALIASES = {
 }
 
 BROKER_URL = 'django://' #le dice a celery que se tiene que conectar a Kombu
+#BROKER_URL = 'amqp://guest@localhost:5672//' #le dice a celery que se tiene que conectar a RabbitMQ
+
+# REST Framework Settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
