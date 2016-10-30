@@ -37,10 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'followers',
-    'posts',
-    'easy_thumbnails',
-    'kombu.transport.django', #para que funcione como broker/cola de tareas
     'rest_framework.authtoken', # contiene los modelos y clases para generar los API keys
     'users',
     'rest_auth',
@@ -140,22 +136,6 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
-
-# Image size
-DEFAULT_IMAGE_SIZE = (2500, 2500)
-
-THUMBNAIL_NAMER = 'easy_thumbnails.namers.alias'
-THUMBNAIL_HIGH_RESOLUTION = True
-THUMBNAIL_ALIASES = {
-    '': {
-        'small': {'size': (500, 500), 'crop': True},
-        'medium': {'size': (750, 750), 'crop': True},
-        'large': {'size': (1000, 1000), 'crop': True},
-    },
-}
-
-BROKER_URL = 'django://' #le dice a celery que se tiene que conectar a Kombu
-#BROKER_URL = 'amqp://guest@localhost:5672//' #le dice a celery que se tiene que conectar a RabbitMQ
 
 # REST Framework Settings
 REST_FRAMEWORK = {

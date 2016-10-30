@@ -20,14 +20,10 @@ from django.contrib import admin
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 
-import followers
-from instageek.views import hello
+from instageek.views import FollowersAPIView
 
 urlpatterns = [
-    url(r'^$', hello),
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('followers.urls')),
-    url(r'^api/', include('posts.urls')),
     url(r'^api/obtain-token/', obtain_auth_token),  # devuelve token haciendo un POST con username y password
     url(r'^api/rest-auth/', include('rest_auth.urls')),
     url(r'^api/rest-auth/registration/', include('rest_auth.registration.urls')),
@@ -35,4 +31,8 @@ urlpatterns = [
     url(r'^api/token-verify/', verify_jwt_token),
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^accounts/', include('allauth.urls')),
+
+    #conexion con microservicio de followers
+    url(r'^api/follow-friend/', FollowersAPIView.as_view())
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
